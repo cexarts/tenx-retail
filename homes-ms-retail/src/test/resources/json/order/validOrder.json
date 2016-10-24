@@ -1,0 +1,8 @@
+{
+  "email" : "cesar@cesar.com",
+  "phone" : "7861235454",
+  "first_name" : "cesar",
+  "last_name" : "villasana",
+  "status" : "ORDERED",
+  "products" : [ { "product_id" : 1 , "count" : 3 } ]
+}
