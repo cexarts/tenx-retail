@@ -1,4 +1,4 @@
-package rest;
+package com.tenx.ms.retail.rest;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.tenx.ms.commons.rest.dto.ResourceCreated;

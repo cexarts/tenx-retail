@@ -1,10 +1,11 @@
-package rest.stock;
+package com.tenx.ms.retail.rest.stock;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.tenx.ms.commons.config.Profiles;
 import com.tenx.ms.commons.rest.dto.ResourceCreated;
 import com.tenx.ms.retail.RetailServiceApp;
-import com.tenx.ms.retail.product.rest.dto.Product;
+import com.tenx.ms.retail.rest.BaseResponse;
+import com.tenx.ms.retail.rest.BaseTest;
 import org.flywaydb.test.annotation.FlywayTest;
 import org.flywaydb.test.junit.FlywayTestExecutionListener;
 import org.junit.Before;
@@ -17,15 +18,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
-import rest.BaseResponse;
-import rest.BaseTest;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = {RetailServiceApp.class})

@@ -1,10 +1,12 @@
-package rest.order;
+package com.tenx.ms.retail.rest.order;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.tenx.ms.commons.config.Profiles;
 import com.tenx.ms.commons.rest.dto.ResourceCreated;
 import com.tenx.ms.retail.RetailServiceApp;
 import com.tenx.ms.retail.order.rest.dto.OrderResponse;
+import com.tenx.ms.retail.rest.BaseResponse;
+import com.tenx.ms.retail.rest.BaseTest;
 import org.flywaydb.test.annotation.FlywayTest;
 import org.flywaydb.test.junit.FlywayTestExecutionListener;
 import org.junit.Before;
@@ -17,8 +19,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
-import rest.BaseResponse;
-import rest.BaseTest;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
