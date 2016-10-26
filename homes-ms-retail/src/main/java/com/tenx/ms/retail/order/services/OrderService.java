@@ -53,15 +53,19 @@ public class OrderService {
 
     private void includeProducts(OrderEntity orderEntity, Order order) {
         for (OrderItem item : order.getProducts()) {
-            updateProductStock(item,order.getStoreId());
-            OrderItemEntity orderItemEntity = new OrderItemEntity();
-            orderItemEntity.setCount(item.getCount());
-            orderItemEntity.setOrder(orderEntity);
-            ProductEntity productEntity = new ProductEntity();
-            productEntity.setProductId(item.getProductId());
-            orderItemEntity.setProduct(productEntity);
-            orderItemRepository.save(orderItemEntity);
+            createOrderItem(orderEntity, order, item);
         }
+    }
+
+    private void createOrderItem(OrderEntity orderEntity, Order order, OrderItem item) {
+        updateProductStock(item,order.getStoreId());
+        OrderItemEntity orderItemEntity = new OrderItemEntity();
+        orderItemEntity.setCount(item.getCount());
+        orderItemEntity.setOrder(orderEntity);
+        ProductEntity productEntity = new ProductEntity();
+        productEntity.setProductId(item.getProductId());
+        orderItemEntity.setProduct(productEntity);
+        orderItemRepository.save(orderItemEntity);
     }
 
     private void updateProductStock(OrderItem item, Long storeId) {

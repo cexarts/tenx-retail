@@ -91,6 +91,7 @@
       <plugin>
         <groupId>com.github.kongchen</groupId>
         <artifactId>swagger-maven-plugin</artifactId>
+        <version>3.1.4</version>
       </plugin>
     </plugins>
   </build>

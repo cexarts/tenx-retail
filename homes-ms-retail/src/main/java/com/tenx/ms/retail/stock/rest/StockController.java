@@ -2,8 +2,6 @@ package com.tenx.ms.retail.stock.rest;
 
 import com.tenx.ms.commons.rest.RestConstants;
 import com.tenx.ms.commons.rest.dto.ResourceCreated;
-import com.tenx.ms.retail.product.rest.dto.Product;
-import com.tenx.ms.retail.product.services.ProductService;
 import com.tenx.ms.retail.stock.rest.dto.Stock;
 import com.tenx.ms.retail.stock.services.StockService;
 import io.swagger.annotations.*;
