@@ -6,6 +6,7 @@ import com.tenx.ms.commons.rest.dto.ResourceCreated;
 import com.tenx.ms.retail.RetailServiceApp;
 import com.tenx.ms.retail.product.rest.dto.Product;
 import com.tenx.ms.retail.rest.BaseTest;
+import com.tenx.ms.retail.store.rest.dto.Store;
 import org.flywaydb.test.annotation.FlywayTest;
 import org.flywaydb.test.junit.FlywayTestExecutionListener;
 import org.junit.Before;
@@ -52,7 +53,8 @@ public class ProductControllerTest extends BaseTest {
     @Test
     @FlywayTest
     public void testCreateValidProduct() {
-        ResourceCreated<Long> productResponse = sendRequest(getBasePath()+PRODUCTS_REQUEST_URI+"/"+storeId,validProductJson, HttpMethod.POST,  HttpStatus.CREATED,  new TypeReference<ResourceCreated<Long>>(){});
+        ResourceCreated<Long> productResponse = sendRequest(getBasePath() + PRODUCTS_REQUEST_URI + "/" + storeId, validProductJson, HttpMethod.POST, HttpStatus.CREATED, new TypeReference<ResourceCreated<Long>>() {
+        });
         assertNotNull("Response shouldn't be null", productResponse);
         assertTrue("Product Id should exist", productResponse.getId() > 0 );
     }
@@ -90,11 +92,40 @@ public class ProductControllerTest extends BaseTest {
         Set<Long> idSet = new HashSet<>();
         idSet.add(productResponse1.getId());
         idSet.add(productResponse2.getId());
-        List<Product> products = sendRequest(getBasePath() + PRODUCTS_REQUEST_URI + "/store/" + storeId, "", HttpMethod.GET, HttpStatus.OK, new TypeReference<List<Product>>() {});
+        List<Product> products = sendRequest(getBasePath() + PRODUCTS_REQUEST_URI + "/store/" + storeId, "", HttpMethod.GET, HttpStatus.OK, new TypeReference<List<Product>>() {
+        });
         assertNotNull("Response shouldn't be null", products);
         assertTrue("Number of products corresponds", products.size() == idSet.size());
         assertTrue("Products correspond to created ones", checkProducts(idSet, products));
     }
+
+    @Test
+    @FlywayTest
+    public void testDeleteExistingProduct() {
+        ResourceCreated<Long> productResponse1 = createProduct(storeId, validProductJson, HttpStatus.CREATED);
+        Long id = productResponse1.getId();
+        sendRequest(getBasePath() + PRODUCTS_REQUEST_URI + "/" + id, "", HttpMethod.DELETE, HttpStatus.OK, new TypeReference<Product>() {
+        });
+        sendRequest(getBasePath() + PRODUCTS_REQUEST_URI + "/" + id, "", HttpMethod.GET, HttpStatus.NOT_FOUND, new TypeReference<Product>() {
+        });
+    }
+
+    @Test
+    @FlywayTest
+    public void testDeleteUnExistentProduct() {
+        sendRequest(getBasePath() + PRODUCTS_REQUEST_URI + "/" + 5, "", HttpMethod.DELETE, HttpStatus.NOT_FOUND, new TypeReference<Product>() {});
+    }
+
+    @Test
+    @FlywayTest
+    public void testCascadeDeleteProductsByStore() {
+        ResourceCreated<Long> productResponse1 = createProduct(storeId,validProductJson,HttpStatus.CREATED);
+        ResourceCreated<Long> productResponse2 = createProduct(storeId, validProductJson2, HttpStatus.CREATED);
+        sendRequest(getBasePath() + STORES_REQUEST_URI + "/" + storeId, "", HttpMethod.DELETE, HttpStatus.OK, new TypeReference<Store>() {});
+        sendRequest(getBasePath() + PRODUCTS_REQUEST_URI + "/" + productResponse1.getId(), "", HttpMethod.GET, HttpStatus.NOT_FOUND, new TypeReference<Product>() {});
+        sendRequest(getBasePath() + PRODUCTS_REQUEST_URI + "/" + productResponse2.getId(), "", HttpMethod.GET, HttpStatus.NOT_FOUND, new TypeReference<Product>() {});
+    }
+
 
     private boolean checkProducts(Set<Long> idSet, List<Product> products) {
         for (Product product: products) {

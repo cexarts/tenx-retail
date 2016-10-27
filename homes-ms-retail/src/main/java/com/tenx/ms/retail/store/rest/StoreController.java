@@ -9,6 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.persistence.EntityNotFoundException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 @Api(value = "stores", description = "Store Management API")
@@ -57,6 +62,28 @@ public class StoreController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResourceCreated<Long> createStore(@Validated @RequestBody Store store) {
         return new ResourceCreated<>(storeService.createStore(store));
+    }
+
+    @ApiOperation(value = "Delete a store")
+    @ApiResponses(
+        value = {
+            @ApiResponse(code = 200, message = "Delete store Success"),
+            @ApiResponse(code = 404, message = "URL not found"),
+            @ApiResponse(code = 500, message = "Internal server error"),
+        }
+    )
+    @RequestMapping(value = {"/{id:\\d+}"}, method = RequestMethod.DELETE)
+    @ResponseStatus(HttpStatus.OK)
+    public ResourceCreated deleteStore(@ApiParam(name = "storeId", value = "Store Id") @PathVariable() Long id) {
+        storeService.deleteStore(id);
+        return new ResourceCreated<>();
+    }
+
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    @ExceptionHandler(EntityNotFoundException.class)
+    protected void handleNotFoundException(EntityNotFoundException ex,
+                                                  HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.sendError(HttpStatus.NOT_FOUND.value(), ex.getMessage());
     }
 
 }

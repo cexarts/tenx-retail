@@ -51,4 +51,12 @@ public class ProductService {
         return productEntity.getProductId();
     }
 
+    public void deleteProduct(Long id) {
+        ProductEntity entity = productRepository.getOne(id);
+        if (entity.getProductId() == 0) {
+            throw new EntityNotFoundException("Product not found. Id: "+ id);
+        }
+        productRepository.delete(id);
+    }
+
 }

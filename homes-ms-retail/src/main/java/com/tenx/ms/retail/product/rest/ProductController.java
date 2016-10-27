@@ -65,6 +65,21 @@ public class ProductController {
         return new ResourceCreated<>(productService.createProduct(product));
     }
 
+    @ApiOperation(value = "Delete a Product")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(code = 200, message = "Delete Success"),
+                    @ApiResponse(code = 404, message = "URL not found"),
+                    @ApiResponse(code = 500, message = "Internal server error"),
+            }
+    )
+    @RequestMapping(value = {"/{id:\\d+}"}, method = RequestMethod.DELETE)
+    @ResponseStatus(HttpStatus.OK)
+    public ResourceCreated deleteProduct(@ApiParam(name = "productId", value = "Product Id") @PathVariable() Long id) {
+        productService.deleteProduct(id);
+        return new ResourceCreated<>();
+    }
+
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     @ExceptionHandler(EntityNotFoundException.class)
     protected void handleUpdateViolationException(EntityNotFoundException ex,

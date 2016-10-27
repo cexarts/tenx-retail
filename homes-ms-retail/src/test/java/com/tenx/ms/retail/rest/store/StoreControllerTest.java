@@ -47,7 +47,7 @@ public class StoreControllerTest extends BaseTest {
     @Test
     @FlywayTest
     public void testCreateStoreGoodRequest() {
-        ResourceCreated<Long> resourceCreated = createStore(validStoreRequestJson,HttpStatus.CREATED);
+        ResourceCreated<Long> resourceCreated = createStore(validStoreRequestJson, HttpStatus.CREATED);
         assertNotNull("Response shouldn't be null", resourceCreated);
         assertTrue("Id should exist", resourceCreated.getId() > 0);
 
@@ -62,13 +62,33 @@ public class StoreControllerTest extends BaseTest {
 
     @Test
     @FlywayTest
-    public void testFindExistingStore() {
+    public void testGetExistingStore() {
         ResourceCreated<Long> resourceCreated = createStore(validStoreRequestJson,HttpStatus.CREATED);
         Long id = resourceCreated.getId();
-        Store store = sendRequest(getBasePath()+STORES_REQUEST_URI+"/"+id, "", HttpMethod.GET,  HttpStatus.OK,  new TypeReference<Store>(){});
+        Store store = sendRequest(getBasePath() + STORES_REQUEST_URI + "/" + id, "", HttpMethod.GET, HttpStatus.OK, new TypeReference<Store>() {
+        });
         assertNotNull("Response shouldn't be null", store);
         assertTrue("Is is the same", store.getStoreId().equals(id));
     }
 
+    @Test
+    @FlywayTest
+    public void testGetNonExistingStore() {
+        sendRequest(getBasePath() + STORES_REQUEST_URI + "/" + 5, "", HttpMethod.GET, HttpStatus.NOT_FOUND, new TypeReference<Store>() {});
+    }
 
+    @Test
+    @FlywayTest
+    public void testDeleteExistingStore() {
+        ResourceCreated<Long> resourceCreated = createStore(validStoreRequestJson, HttpStatus.CREATED);
+        Long id = resourceCreated.getId();
+        sendRequest(getBasePath() + STORES_REQUEST_URI + "/" + id, "", HttpMethod.DELETE, HttpStatus.OK, new TypeReference<Store>() {});
+        sendRequest(getBasePath() + STORES_REQUEST_URI + "/" + id, "", HttpMethod.GET, HttpStatus.NOT_FOUND, new TypeReference<Store>() {});
+    }
+
+    @Test
+    @FlywayTest
+    public void testDeleteUnExistentStore() {
+        sendRequest(getBasePath() + STORES_REQUEST_URI + "/" + 5, "", HttpMethod.DELETE, HttpStatus.NOT_FOUND, new TypeReference<Store>() {});
+    }
 }

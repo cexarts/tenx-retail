@@ -7,6 +7,7 @@ import com.tenx.ms.retail.store.rest.dto.Store;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,6 +21,9 @@ public class StoreService {
 
     public Store getStoreById(Long id) {
         StoreEntity storeEntity = storeRepository.getOne(id);
+        if (storeEntity.getStoreId() == 0) {
+            throw new EntityNotFoundException("Store not found. Id: "+ id);
+        }
         return CONVERTER.toT1(storeEntity);
     }
 
@@ -41,9 +45,10 @@ public class StoreService {
 
     public void deleteStore(Long id) {
         StoreEntity entity = storeRepository.getOne(id);
-        if (entity != null) {
-            storeRepository.delete(id);
+        if (entity.getStoreId() == 0) {
+            throw new EntityNotFoundException("Store not found. Id: "+ id);
         }
+        storeRepository.delete(id);
     }
 
 }
